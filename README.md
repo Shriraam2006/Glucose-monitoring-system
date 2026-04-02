@@ -44,7 +44,7 @@ Mechatronics Engineering Student
 
 ## Implementation
 The system is implemented using ESP32. The source code is available in:
-- esp32glucoseinfo
+- esp32glucose.info
 
 
   
