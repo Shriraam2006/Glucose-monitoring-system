@@ -1,0 +1,61 @@
+const int sensorPin = 34;
+
+const int ledLow = 25;
+const int ledNormal = 26;
+const int ledHigh = 27;
+
+float lowThreshold = 80.0;
+float highThreshold = 120.0;
+
+void setup() {
+  Serial.begin(115200);
+
+  pinMode(ledLow, OUTPUT);
+  pinMode(ledNormal, OUTPUT);
+  pinMode(ledHigh, OUTPUT);
+}
+
+void loop() {
+  int sum = 0;
+  for (int i = 0; i < 10; i++) {
+    sum += analogRead(sensorPin);
+    delay(10);
+  }
+
+  int sensorValue = sum / 10;
+
+  if (sensorValue > 100) {
+
+    float glucoseLevel = map(sensorValue, 100, 3000, 70, 140);
+
+    Serial.print("Sensor Value: ");
+    Serial.print(sensorValue);
+    Serial.print(" | Estimated Glucose Level: ");
+    Serial.println(glucoseLevel);
+
+    if (glucoseLevel < lowThreshold) {
+      digitalWrite(ledLow, HIGH);
+      digitalWrite(ledNormal, LOW);
+      digitalWrite(ledHigh, LOW);
+    } 
+    else if (glucoseLevel >= lowThreshold && glucoseLevel <= highThreshold) {
+      digitalWrite(ledLow, LOW);
+      digitalWrite(ledNormal, HIGH);
+      digitalWrite(ledHigh, LOW);
+    } 
+    else {
+      digitalWrite(ledLow, LOW);
+      digitalWrite(ledNormal, LOW);
+      digitalWrite(ledHigh, HIGH);
+    }
+
+  } 
+  else {
+    digitalWrite(ledLow, LOW);
+    digitalWrite(ledNormal, LOW);
+    digitalWrite(ledHigh, LOW);
+    Serial.println("No hand detected...");
+  }
+
+  delay(1000);
+}
